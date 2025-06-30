@@ -38,7 +38,7 @@ Your `linear_regression_model.pkl` should be a scikit-learn LinearRegression mod
 - Keyboard shortcuts (Ctrl+Enter to submit, Escape to reset)
 
 
-![image](https://github.com/user-attachments/assets/c949ba17-e716-481d-a88b-affbfb313ee4)
+[image](https://github.com/user-attachments/assets/c949ba17-e716-481d-a88b-affbfb313ee4)
 
 ![image](https://github.com/user-attachments/assets/8c36d8d7-57ff-4295-8ce7-574f35fedeec)
 
