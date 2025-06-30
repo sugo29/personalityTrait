@@ -1,6 +1,4 @@
-"""
-Train a linear regression model on the actual personality dataset
-"""
+
 
 import numpy as np
 import pickle
