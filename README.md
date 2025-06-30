@@ -30,7 +30,7 @@ Your `linear_regression_model.pkl` should be a scikit-learn LinearRegression mod
 - Takes 7 numerical features as input
 - Returns a prediction between 0 (Introvert) and 1 (Extrovert)
 - Is saved using pickle
-```
+  
 ### User Experience
 - Smooth animations and transitions
 - Loading states for predictions
