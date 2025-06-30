@@ -30,17 +30,6 @@ A Flask web application that predicts whether someone is an introvert or extrove
    pip install -r requirements.txt
    ```
 
-3. **Add your trained model**:
-   - Place your `linear_regression_model.pkl` file in the root directory
-   - The model should be trained to predict personality type (0 for Introvert, 1 for Extrovert)
-   - Expected input features (in order):
-     1. Time Spent Alone (hours/day)
-     2. Stage Fear (1-10 scale)
-     3. Social Event Attendance (events/month)
-     4. Going Outside (days/week)
-     5. Drained After Socializing (1-10 scale)
-     6. Friends Circle Size (number)
-     7. Post Frequency (posts/week)
 
 ## Usage
 
@@ -54,23 +43,6 @@ A Flask web application that predicts whether someone is an introvert or extrove
 3. **Fill in the personality assessment form** with your behavioral patterns
 
 4. **Click "Predict My Personality"** to get your result
-
-## Project Structure
-
-```
-personalityTrait/
-├── app.py                 # Main Flask application
-├── requirements.txt       # Python dependencies
-├── linear_regression_model.pkl  # Your trained model (add this file)
-├── templates/
-│   ├── index.html        # Main prediction page
-│   └── about.html        # About page
-└── static/
-    ├── css/
-    │   └── style.css     # Styling
-    └── js/
-        └── script.js     # Frontend JavaScript
-```
 
 ## Model Requirements
 
@@ -97,19 +69,6 @@ model.fit(X, y)
 with open('linear_regression_model.pkl', 'wb') as f:
     pickle.dump(model, f)
 ```
-
-## Features Details
-
-### Input Validation
-- All inputs are validated for proper ranges
-- Real-time feedback for invalid entries
-- Smooth error handling and display
-
-### Responsive Design
-- Mobile-first responsive design
-- Touch-friendly interface
-- Optimized for all screen sizes
-
 ### User Experience
 - Smooth animations and transitions
 - Loading states for predictions
@@ -130,28 +89,13 @@ Modify the prediction interpretation in `app.py`:
 - Add more detailed personality descriptions
 - Include confidence scores
 
-## Troubleshooting
+![image](https://github.com/user-attachments/assets/c949ba17-e716-481d-a88b-affbfb313ee4)
 
-### Model Not Found
-If you see "Model not loaded" error:
-1. Ensure `linear_regression_model.pkl` is in the root directory
-2. Check that the model was saved using pickle
-3. Verify the model is a valid scikit-learn object
+![image](https://github.com/user-attachments/assets/8c36d8d7-57ff-4295-8ce7-574f35fedeec)
 
-### Prediction Errors
-If predictions fail:
-1. Check that your model expects 7 features in the correct order
-2. Ensure input validation ranges match your model's training data
-3. Verify the model returns numerical predictions
+![image](https://github.com/user-attachments/assets/8bab72ca-b978-4c0b-a69f-7e4defca185a)
 
-## Contributing
+![image](https://github.com/user-attachments/assets/c0baaf8b-ad17-4acc-b131-0601054c2610)
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
 
-## License
 
-This project is open source and available under the MIT License.
