@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dataset Visualization - Personality Trait Predictor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .charts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .chart-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 2px solid #f0f0f0;
+        }
+        
+        .chart-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+            text-align: center;
+        }
+        
+        .chart-canvas {
+            width: 100% !important;
+            height: 300px !important;
+        }
+        
+        .dataset-overview {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .overview-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .stat-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+        }
+        
+        .error {
+            background: #ff6b6b;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .feature-comparison {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .comparison-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .feature-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .comparison-values {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .value-item {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .value-number {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .introvert-value {
+            color: #667eea;
+        }
+        
+        .extrovert-value {
+            color: #f093fb;
+        }
+        
+        .value-label {
+            font-size: 0.8rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Dataset Visualization</h1>
+            <p>Explore the personality trait patterns in our training dataset</p>
+        </header>
+
+        <nav class="nav">
+            <a href="/" class="nav-link">About</a>
+            <a href="/predict" class="nav-link">Predict</a>
+            <a href="/visualize" class="nav-link active">Visualize</a>
+        </nav>
+
+        <div class="content">
+            <div id="loading" class="loading">
+                <h3>Loading dataset...</h3>
+                <p>Analyzing 2,900 personality profiles...</p>
+            </div>
+
+            <div id="error" class="error" style="display: none;">
+                <h3>Error Loading Data</h3>
+                <p id="error-message"></p>
+            </div>
+
+            <div id="visualization-content" style="display: none;">
+                <div class="dataset-overview">
+                    <h2>Dataset Overview</h2>
+                    <p>Comprehensive analysis of personality traits from our training dataset</p>
+                    <div class="overview-stats" id="overview-stats">
+                        <!-- Stats will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <div class="feature-comparison" id="feature-comparison">
+                    <!-- Feature comparisons will be populated by JavaScript -->
+                </div>
+
+                <div class="charts-container" id="charts-container">
+                    <!-- Charts will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Chart.js default configuration
+        Chart.defaults.font.family = 'Poppins';
+        Chart.defaults.font.size = 12;
+        
+        // Load and visualize dataset
+        async function loadDatasetVisualization() {
+            try {
+                const response = await fetch('/api/dataset-stats');
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                // Hide loading, show content
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('visualization-content').style.display = 'block';
+                
+                // Populate overview stats
+                populateOverviewStats(data);
+                
+                // Create feature comparison
+                createFeatureComparison(data);
+                
+                // Create charts
+                createCharts(data);
+                
+            } catch (error) {
+                console.error('Error loading dataset:', error);
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error').style.display = 'block';
+                document.getElementById('error-message').textContent = error.message;
+            }
+        }
+        
+        function populateOverviewStats(data) {
+            const statsContainer = document.getElementById('overview-stats');
+            const introvertPercentage = ((data.introvert_count / data.total_samples) * 100).toFixed(1);
+            const extrovertPercentage = ((data.extrovert_count / data.total_samples) * 100).toFixed(1);
+            
+            statsContainer.innerHTML = `
+                <div class="stat-item">
+                    <div class="stat-number">${data.total_samples.toLocaleString()}</div>
+                    <div class="stat-label">Total Samples</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">${data.introvert_count.toLocaleString()}</div>
+                    <div class="stat-label">Introverts (${introvertPercentage}%)</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">${data.extrovert_count.toLocaleString()}</div>
+                    <div class="stat-label">Extroverts (${extrovertPercentage}%)</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">7</div>
+                    <div class="stat-label">Features Analyzed</div>
+                </div>
+            `;
+        }
+        
+        function createFeatureComparison(data) {
+            const comparisonContainer = document.getElementById('feature-comparison');
+            const featureNames = {
+                'Time_spent_Alone': 'Time Spent Alone (hours/day)',
+                'Stage_fear': 'Stage Fear (%)',
+                'Social_event_attendance': 'Social Events (per month)',
+                'Going_outside': 'Going Outside (days/week)',
+                'Drained_after_socializing': 'Drained After Socializing (%)',
+                'Friends_circle_size': 'Friends Circle Size',
+                'Post_frequency': 'Social Media Posts (per week)'
+            };
+            
+            let html = '';
+            for (const [feature, displayName] of Object.entries(featureNames)) {
+                const featureData = data.features[feature];
+                let introValue = featureData.introvert_avg;
+                let extroValue = featureData.extrovert_avg;
+                
+                // Convert binary features to percentages
+                if (feature === 'Stage_fear' || feature === 'Drained_after_socializing') {
+                    introValue = (introValue * 100).toFixed(1) + '%';
+                    extroValue = (extroValue * 100).toFixed(1) + '%';
+                } else {
+                    introValue = introValue.toFixed(1);
+                    extroValue = extroValue.toFixed(1);
+                }
+                
+                html += `
+                    <div class="comparison-card">
+                        <div class="feature-name">${displayName}</div>
+                        <div class="comparison-values">
+                            <div class="value-item">
+                                <div class="value-number introvert-value">${introValue}</div>
+                                <div class="value-label">Introverts</div>
+                            </div>
+                            <div class="value-item">
+                                <div class="value-number extrovert-value">${extroValue}</div>
+                                <div class="value-label">Extroverts</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            comparisonContainer.innerHTML = html;
+        }
+        
+        function createCharts(data) {
+            const chartsContainer = document.getElementById('charts-container');
+            const featureNames = {
+                'Time_spent_Alone': 'Time Spent Alone (hours/day)',
+                'Stage_fear': 'Stage Fear',
+                'Social_event_attendance': 'Social Events (per month)',
+                'Going_outside': 'Going Outside (days/week)',
+                'Drained_after_socializing': 'Drained After Socializing',
+                'Friends_circle_size': 'Friends Circle Size',
+                'Post_frequency': 'Social Media Posts (per week)'
+            };
+            
+            // Create personality distribution pie chart
+            createPersonalityDistributionChart(data);
+            
+            // Create charts for each feature
+            for (const [feature, displayName] of Object.entries(featureNames)) {
+                createFeatureChart(feature, displayName, data.features[feature]);
+            }
+        }
+        
+        function createPersonalityDistributionChart(data) {
+            const chartCard = document.createElement('div');
+            chartCard.className = 'chart-card';
+            chartCard.innerHTML = `
+                <div class="chart-title">Personality Type Distribution</div>
+                <canvas class="chart-canvas" id="personality-distribution"></canvas>
+            `;
+            document.getElementById('charts-container').appendChild(chartCard);
+            
+            const ctx = document.getElementById('personality-distribution').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Introverts', 'Extroverts'],
+                    datasets: [{
+                        data: [data.introvert_count, data.extrovert_count],
+                        backgroundColor: ['#667eea', '#f093fb'],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function createFeatureChart(feature, displayName, featureData) {
+            const chartCard = document.createElement('div');
+            chartCard.className = 'chart-card';
+            chartCard.innerHTML = `
+                <div class="chart-title">${displayName}</div>
+                <canvas class="chart-canvas" id="chart-${feature}"></canvas>
+            `;
+            document.getElementById('charts-container').appendChild(chartCard);
+            
+            const ctx = document.getElementById(`chart-${feature}`).getContext('2d');
+            
+            // For binary features (Stage_fear, Drained_after_socializing), create bar charts
+            if (feature === 'Stage_fear' || feature === 'Drained_after_socializing') {
+                const introYes = featureData.introvert_avg * 100;
+                const extroYes = featureData.extrovert_avg * 100;
+                
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Yes', 'No'],
+                        datasets: [
+                            {
+                                label: 'Introverts (%)',
+                                data: [introYes, 100 - introYes],
+                                backgroundColor: '#667eea',
+                                borderRadius: 5
+                            },
+                            {
+                                label: 'Extroverts (%)',
+                                data: [extroYes, 100 - extroYes],
+                                backgroundColor: '#f093fb',
+                                borderRadius: 5
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                ticks: {
+                                    callback: function(value) {
+                                        return value + '%';
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'top'
+                            }
+                        }
+                    }
+                });
+            } else {
+                // For continuous features, create comparison bar chart
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Introverts', 'Extroverts'],
+                        datasets: [{
+                            label: 'Average Value',
+                            data: [featureData.introvert_avg, featureData.extrovert_avg],
+                            backgroundColor: ['#667eea', '#f093fb'],
+                            borderRadius: 5,
+                            borderWidth: 2,
+                            borderColor: ['#4c63d2', '#e67ce6']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            }
+        }
+        
+        // Load visualization on page load
+        document.addEventListener('DOMContentLoaded', loadDatasetVisualization);
+    </script>
+</body>
+</html>

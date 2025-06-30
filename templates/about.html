@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - Personality Trait Predictor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Personality Trait Predictor</h1>
+            <p>About Our Personality Prediction Model</p>
+        </header>
+
+        <nav class="nav">
+            <a href="/" class="nav-link active">About</a>
+            <a href="/predict" class="nav-link">Predict</a>
+            <a href="/visualize" class="nav-link">Visualize</a>
+        </nav>
+
+        <div class="content">
+            <div class="about-content">
+                <section class="about-section">
+                    <h2>How It Works</h2>
+                    <p>Our personality trait predictor uses a linear regression model trained on behavioral patterns to determine whether you lean more towards introversion or extroversion. The model analyzes seven key factors that influence personality traits:</p>
+                    
+                    <div class="factors-grid">
+                        <div class="factor-card">
+                            <h3>⏰ Time Spent Alone</h3>
+                            <p>The number of hours you spend alone daily reflects your need for solitude and personal space.</p>
+                        </div>
+                        
+                        <div class="factor-card">
+                            <h3>🎭 Stage Fear</h3>
+                            <p>Your comfort level with public speaking and being the center of attention.</p>
+                        </div>
+                        
+                        <div class="factor-card">
+                            <h3>🎉 Social Event Attendance</h3>
+                            <p>How frequently you participate in social gatherings and events.</p>
+                        </div>
+                        
+                        <div class="factor-card">
+                            <h3>🚪 Going Outside</h3>
+                            <p>Your tendency to engage in outdoor social activities and adventures.</p>
+                        </div>
+                        
+                        <div class="factor-card">
+                            <h3>😴 Drained After Socializing</h3>
+                            <p>How energized or exhausted you feel after social interactions.</p>
+                        </div>
+                        
+                        <div class="factor-card">
+                            <h3>👥 Friends Circle Size</h3>
+                            <p>The number of close friends you maintain relationships with.</p>
+                        </div>
+                        
+                        <div class="factor-card">
+                            <h3>📱 Post Frequency</h3>
+                            <p>How often you share content on social media platforms.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="about-section">
+                    <h2>Understanding the Results</h2>
+                    <div class="personality-explanation">
+                        <div class="personality-card introvert">
+                            <h3>🤫 Introvert</h3>
+                            <p>Introverts typically prefer quieter environments, smaller social groups, and need time alone to recharge their energy. They often think before speaking and prefer deep conversations over small talk.</p>
+                        </div>
+                        
+                        <div class="personality-card extrovert">
+                            <h3>🎊 Extrovert</h3>
+                            <p>Extroverts are energized by social interactions, enjoy being around people, and are comfortable in large groups. They tend to think out loud and are often seen as outgoing and sociable.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="about-section">
+                    <h2>Important Note</h2>
+                    <p class="disclaimer">This tool provides a simplified assessment based on behavioral patterns. Personality is complex and exists on a spectrum. Most people exhibit both introverted and extroverted traits depending on the situation. Use this as a fun exploration tool rather than a definitive assessment.</p>
+                </section>
+
+                <div class="cta-section">
+                    <a href="/predict" class="cta-btn">Try the Predictor</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

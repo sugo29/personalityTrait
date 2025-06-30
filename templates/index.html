@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personality Trait Predictor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Personality Trait Predictor</h1>
+            <p>Discover whether you're an introvert or extrovert based on your behavioral patterns</p>
+        </header>
+
+        <nav class="nav">
+            <a href="/" class="nav-link">About</a>
+            <a href="/predict" class="nav-link active">Predict</a>
+            <a href="/visualize" class="nav-link">Visualize</a>
+        </nav>
+
+        <div class="content">
+            <form id="personalityForm" class="prediction-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="time_spent_alone">Time Spent Alone (hours/day)</label>
+                        <input type="number" id="time_spent_alone" name="time_spent_alone" step="0.1" min="0" max="24" required>
+                        <small>How many hours do you spend alone daily?</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="stage_fear">Stage Fear</label>
+                        <select id="stage_fear" name="stage_fear" required>
+                            <option value="">Select an option</option>
+                            <option value="yes">Yes - I have stage fear</option>
+                            <option value="no">No - I don't have stage fear</option>
+                        </select>
+                        <small>Do you experience fear when speaking in public or performing on stage?</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="social_event_attendance">Social Event Attendance (events/month)</label>
+                        <input type="number" id="social_event_attendance" name="social_event_attendance" step="1" min="0" max="30" required>
+                        <small>How many social events do you attend monthly?</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="going_outside">Going Outside (days/week)</label>
+                        <input type="number" id="going_outside" name="going_outside" step="1" min="0" max="7" required>
+                        <small>How many days per week do you go outside for activities?</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="drained_after_socializing">Drained After Socializing</label>
+                        <select id="drained_after_socializing" name="drained_after_socializing" required>
+                            <option value="">Select an option</option>
+                            <option value="yes">Yes - I feel drained after socializing</option>
+                            <option value="no">No - I feel energized after socializing</option>
+                        </select>
+                        <small>Do you typically feel exhausted after social interactions?</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="friends_circle_size">Friends Circle Size</label>
+                        <input type="number" id="friends_circle_size" name="friends_circle_size" step="1" min="0" max="100" required>
+                        <small>How many close friends do you have?</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="post_frequency">Social Media Post Frequency (posts/week)</label>
+                        <input type="number" id="post_frequency" name="post_frequency" step="1" min="0" max="50" required>
+                        <small>How many times do you post on social media per week?</small>
+                    </div>
+                </div>
+
+                <button type="submit" class="predict-btn">
+                    <span class="btn-text">Predict My Personality</span>
+                    <div class="loader" style="display: none;"></div>
+                </button>
+            </form>
+
+            <div id="result" class="result" style="display: none;">
+                <div class="result-content">
+                    <h3 class="result-title">Your Personality Type</h3>
+                    <div class="personality-type"></div>
+                    <div class="prediction-value"></div>
+                    <div class="description"></div>
+                </div>
+            </div>
+
+            <div id="error" class="error" style="display: none;">
+                <div class="error-content">
+                    <h3>Error</h3>
+                    <p class="error-message"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
